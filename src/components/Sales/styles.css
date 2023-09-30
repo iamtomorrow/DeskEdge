@@ -1,0 +1,11 @@
+
+.sales--container {
+    width: 100%;
+    height: 100%;
+}
+
+.sales-cards--container {
+    width: 100%;
+    height: calc(100% - 70px);
+    display: flex;
+}

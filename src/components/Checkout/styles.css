@@ -1,0 +1,116 @@
+
+.checkout--container {
+    width: 100%;
+    height: 100%;
+}
+.checkout-bar--container {
+    width: 100%;
+    height: calc(100% - 70px);
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+}
+
+.checkout-bar-left--container {
+    width: 50%;
+    height: 100%;
+    /* background-color: rgb(132, 255, 0); */
+}
+
+.checkout-bar-right--container {
+    width: 50%;
+    height: 100%;
+    padding: 0 20px 0 0;
+    /* background-color: aqua; */
+}
+.payment-bar--container {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+}
+.payment-bar-header--container {
+    width: 100%;
+    min-height: 100px;
+    display: flex;
+    align-items: center;
+    padding: 0 0 0 16px;
+}
+.payment-bar-title {
+    color: #ffffff;
+    font-size: 20px;
+}
+
+.payment-bar-body--container {
+    width: 100%;
+    height: 100%;
+    padding: 10px 16px 10px 16px;
+}
+.payment-bar-footer--container {
+    width: 100%;
+    min-height: 160px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-around;
+}
+.checkout-info--container {
+    width: 100%;
+    height: 40px;
+    display: flex;
+    justify-content: space-between;
+}
+.checkout-info-h1 {
+    color: #ffffff;
+}
+.checkout-submit--container {
+    width: 100%;
+    height: 100px;
+    display: flex;
+    align-items: center;
+}
+.checkout-submit-button {
+    cursor: pointer;
+    color: #ffffff;
+    width: 100%;
+    height: 60px;
+    font-size: 18px;
+    background: #0041C0;
+    border: none;
+    outline: none;
+    transition: all .5s ease;
+}
+.checkout-submit-button:hover {
+    opacity: .5;
+    transition: all .5s ease;
+}
+.payment-item {
+    margin: 12px 0 3px 0;
+    width: 100%;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    padding: 0 0 0 10px;
+}
+.payment-info-p {
+    color: #ffffff;
+}
+.payment-methods--container {
+    width: 100%;
+    height: 100px;
+    display: flex;
+    flex-direction: column;
+}
+.payment-item-p {
+    margin: 0 0 0 10px;
+    color: #ffffff;
+}
+.checkbox-input {
+    outline: none;
+    border: none;
+    width: 20px;
+    border-radius: 9px;
+}

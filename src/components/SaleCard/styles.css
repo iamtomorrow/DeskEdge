@@ -1,0 +1,7 @@
+
+.salecard--container {
+    width: 220px;
+    height: 300px;
+    background: linear-gradient(45deg, #1313133e, #13131396, #1313133c);
+    border-radius: 3px;
+}
