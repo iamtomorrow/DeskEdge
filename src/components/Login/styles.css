@@ -49,7 +49,7 @@
 }
 
 .login-form {
-    width: 50%;
+    width: 40%;
     height: 100%;
     display: flex;
     flex-direction: column;
@@ -85,4 +85,21 @@
     border: none;
     background-color: #0041C0;
     color: #ffffff;
+}
+
+.form-change-info {
+    color: #ffffff;
+    font-size: 12px;
+}
+.form-change-info-link {
+    cursor: pointer;
+    color: #0041C0;
+    font-size: 12px;
+    margin-left: 6px;
+}
+
+@media screen and (max-width: 800px) {
+    .login-form {
+        width: 90%;
+    }
 }

@@ -2,17 +2,19 @@ import { useEffect, useState } from 'react'
 
 import './App.css'
 import { Sidebar } from './components/Sidebar/Sidebar'
-import { Login } from './components/Login/Login';
+
+import Cookies from 'js-cookie';
+import { API } from './api/Auth';
 
 function App() {
-  
-  const [ user, setUser ] = useState(null);
 
-  /* useEffect(() => {
-    if ( !user ) {
+  const [ token, setToken ] = useState(Cookies.get("token"));
+
+  useEffect(() => {
+    if ( token === undefined || token === null ) {
       window.location.href = "/Login";
-    }
-  }, []) */
+    } 
+  }, [])
 
   return (
     <div className='App'>
