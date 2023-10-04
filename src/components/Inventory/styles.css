@@ -5,6 +5,7 @@
 }
 
 .inventory-bar--container {
+    overflow-y: auto;
     width: 100%;
     height: calc(100% - 70px);
     padding: 20px;
@@ -26,6 +27,12 @@
 .header-item {
     color: #ffffff;
     font-size: 13px;
+    width: 12%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 6px;
 }
 .inventory-item-list--container {
     width: 100%;

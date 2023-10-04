@@ -1,13 +1,28 @@
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Header } from "../Header/Header"
 import { InventoryItem } from "../InventoryItem/InventoryItem";
 import { Sidebar } from "../Sidebar/Sidebar"
 
 import './styles.css';
+import { API } from "../../api/Auth";
+import Cookies from "js-cookie";
 
 export const Inventory = ( ) => {
-    const [ inventory, setInventory ] = useState();
+    const [ id, setId ] = useState(Cookies.get("id"));
+    const [ inventory, setInventory ] = useState([]);
+
+    useEffect(() => {
+        const getProducts = async ( ) => {
+            let data = await API.getProducts( id );
+            setInventory(data);
+        }
+        getProducts();
+    }, []);
+
+    const handleItemClick = ( id ) => {
+        alert(`dc`);
+    }
 
     return (
         <div className="App">
@@ -19,9 +34,6 @@ export const Inventory = ( ) => {
                         <div className="inventory-inner-header--container">
                             <div className="header-item">
                                 <p>Name</p>
-                            </div>
-                            <div className="header-item">
-                                <p>Category</p>
                             </div>
                             <div className="header-item">
                                 <p>SKU</p>
@@ -44,8 +56,19 @@ export const Inventory = ( ) => {
                         </div>
                     </div>
                     <div className="inventory-item-list--container">
-                        <InventoryItem />
-                        <InventoryItem />
+                        { inventory &&
+                            inventory.map((item) => (
+                                <InventoryItem name={ item.name } 
+                                category={ item.category } 
+                                SKU={ item.SKU } 
+                                barcode={ item.barcode }
+                                price={ item.price } 
+                                final_price={ item.final_price }
+                                max_discount={ item.discount }
+                                stock={ item.quantity }
+                                onClick={ handleItemClick } />
+                            ))
+                        }
                     </div>
                 </div>
             </div>

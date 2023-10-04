@@ -10,8 +10,16 @@ import CheckIcon from 'remixicon-react/CheckLineIcon';
 import CartIcon from 'remixicon-react/ShoppingCart2FillIcon';
 
 import { SidebarItem } from '../SidebarItem/SidebarItem';
+import { useState } from 'react';
 
 export const Sidebar = ( ) => {
+    const [ name, setName ] = useState(localStorage.getItem("name"));
+    const [ email, setEmail ] = useState(localStorage.getItem("email"));
+    const [ logo, setLogo ] = useState(localStorage.getItem("logo"));
+
+    const handleUserSectionClick = ( ) => {
+        window.location.href = "/";
+    }
 
     return (
         <div className="sidebar--container">
@@ -29,6 +37,18 @@ export const Sidebar = ( ) => {
                     <SidebarItem icon={ <CheckIcon style={{width: 16}} /> } label={"Sales"} />
                     <SidebarItem icon={ <CartIcon style={{width: 16}} /> } label={"Checkout"} />
                 </div>
+
+                <footer className='sidebar-footer--container'>
+                    <section className='user-section--container' onClick={ handleUserSectionClick }>
+                        <div className='user-logo--container'>
+                            <img src={logo} className='user-logo' />
+                        </div>
+                        <div className='user-section-right--container'> 
+                            <p id='user-name'>{ name }</p>
+                            <p id='user-email'>{ email }</p>
+                        </div>
+                    </section>
+                </footer>
             </div>
         </div>
     )

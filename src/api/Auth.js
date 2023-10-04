@@ -3,26 +3,28 @@ import validator from "validator"
 import Cookies from "js-cookie";
 import bcrypt from 'bcryptjs';
 
-import { firebaseConfig } from "./firebaseConfig";
 import { app } from "./firebaseConfig";
-import { addDoc, collection, doc, getDoc, getDocs, getFirestore, setDoc, updateDoc } from "firebase/firestore";
+import { addDoc, arrayUnion, collection, doc, getDoc, getDocs, getFirestore, onSnapshot, setDoc, updateDoc } from "firebase/firestore";
 
-const database = getFirestore()
+const database = getFirestore(app);
 
 export const API = {
     register: async (name, country, email, CEO, service, password ) => {
         const collectionRef = collection(database, "companies");
 
         const hash = bcrypt.hashSync(password, bcrypt.genSaltSync(10));
+        const token = bcrypt.hashSync(password)
+
         const user = { 
-            name,
+            company_name: name,
             email,
             password: hash,
             CEO,
             service,
             country,
             date: Date.now(),
-            logo: ""
+            logo: "",
+            token
         }
 
         if (!validator.isEmail(email)) {
@@ -52,7 +54,8 @@ export const API = {
                 products: []
             })
 
-            Cookies.set("token", id);
+            Cookies.set("token", token);
+            Cookies.set("id", id);
             window.location.href = "/";
         } catch (err) {
             console.log(err);
@@ -62,9 +65,14 @@ export const API = {
 
     access: async ( email, password ) => {
         const collectionRef = collection(database, "companies");
+        let token = null;
+        let id = null;
+        let name = "";
+        let _email = "";
+        let CEO = "";
+        let logo = "";
 
         if (!validator.isEmail(email)) {
-            console.log(email);
             return "Please, provide a valid email.";
         }
         if (!validator.isStrongPassword(password)) {
@@ -73,28 +81,85 @@ export const API = {
 
         await getDocs(collectionRef)
         .then((snapshot) => {
-            snapshot.docs.forEach( async (doc) => {
-                if (doc.data().email === email){
-                    console.log(email);
-
-                    const hash = doc.data().password;
-                    const result = await bcrypt.compare(password, hash);
-
-                    if (result) {
-                        Cookies.set("token", doc.data().id);
-                        window.location.href = "/";
-                    }
+            snapshot.docs.forEach( (doc) => {
+                if (doc.data().email === email) {
+                    token = doc.data().token;
+                    id = doc.data().id;
+                    name = doc.data().name;
+                    _email = doc.data().email;
+                    CEO = doc.data().CEO;
+                    logo = doc.data().logo;
                 };
             })
         })
+
+        Cookies.set("token", token);
+        Cookies.set("id", id);
+        localStorage.setItem("name", name);
+        localStorage.setItem("email", _email);
+        localStorage.setItem("CEO", CEO);
+        localStorage.setItem("logo", logo);
+
+        return { token, id };
     },
 
     getMe: async ( token ) => {
-        const collectionRef = collection(database, "companies");
+        let user = null;
 
         await getDoc(doc(database, "companies", token))
         .then((snapshot) => {
-            // console.log(snapshot.data());
+            user = snapshot.data();
         })
+        return user;
+    },
+
+    registerProduct: async ( id, name, price, discount, final_price, category, quantity, SKU, barcode ) => {  
+        console.log(id);
+
+        let result = await updateDoc(doc(database, "containers", id), {
+            products: arrayUnion({
+                name, 
+                price, 
+                discount, 
+                final_price, 
+                category, 
+                quantity, 
+                SKU, 
+                barcode,
+                date: Date.now()
+            })
+        })
+
+        return result;
+    },
+
+    getProducts: async ( id ) => {
+        let products = [];
+
+        await getDoc(doc(database, "containers", id))
+        .then((snapshot) => {
+            products = snapshot.data().products;
+        })
+
+        onSnapshot(doc(database, "containers", id), (snapshot) => {
+            products = snapshot.data().products;
+        })
+
+        return products;
+    },
+
+    getProduct: async ( id, barcode ) => {
+        let product = null;
+
+        await getDoc(doc(database, "containers", id))
+        .then((snapshot) => {
+            snapshot.data().products.forEach((prod) => {
+                if (prod.barcode === barcode) {
+                    product = prod;
+                }
+            });
+        })
+
+        return product;
     }
 }

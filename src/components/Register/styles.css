@@ -47,6 +47,7 @@
 }
 .submit-register-form {
     margin-top: 10px;
+    font-size: 14px;
     cursor: pointer;
     outline: none;
     border: none;
@@ -58,4 +59,30 @@
 .submit-register-form:hover {
     opacity: .5;
     transition: all .5s ease;
+}
+
+.barcode-input {
+    width: 100%;
+    display: flex;
+}
+#generate-button {
+    cursor: pointer;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    color: #ffffff;
+    background: var(--primary-color);
+    outline: none;
+    border: none;
+    transition: all .5s ease;
+    margin-left: 3px;
+}
+#generate-button:hover {
+    opacity: .5;
+    transition: all .5s ease;
+}
+
+#category-item {
+    color: var(--primary-color);
+    font-size: 11px;
 }

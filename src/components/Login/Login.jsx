@@ -6,7 +6,6 @@ import { useState } from 'react';
 import { API } from '../../api/Auth';
 
 export const Login = ( ) => {
-
     const [ switchForm, setSwitchForm ] = useState(false);
 
     const [ name, setName ] = useState('');
@@ -19,10 +18,14 @@ export const Login = ( ) => {
     const handleLogin = async ( e ) => {
         e.preventDefault();
         alert(email);
-        if (!switchForm) {
+
+        if ( !switchForm ) {
             await API.register(name, country, email, CEO, service, password);
         } else {
-            await API.access(email, password);
+            let data = await API.access(email, password);
+            if (data !== null) {
+                window.location.href = "/";
+            }
         }
     }
 
