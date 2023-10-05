@@ -161,5 +161,20 @@ export const API = {
         })
 
         return product;
+    },
+
+    getScanned: async ( id ) => {
+        let code = "";
+
+        await getDoc(doc(database, "scans", id))
+        .then((snapshot) => {
+            code = snapshot.data().codes.at(-1);
+        })
+
+        onSnapshot(doc(database, "scans", id), (snapshot) => {
+            code = snapshot.data().codes.at(-1);
+        })
+
+        return code;
     }
 }

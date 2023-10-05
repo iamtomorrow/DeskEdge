@@ -36,6 +36,22 @@ export const Checkout = ( { operator } ) => {
         })
     }, [list])
 
+    useEffect(( ) => {
+        let _id = Cookies.get("id");
+        setId(_id);
+    })
+
+    useEffect(( ) => {
+        const getScans = async ( ) => {
+            if (id) {
+                let _scanned = await API.getScanned( id );
+                setScanned(_scanned);
+                console.log("just scanned: ", scanned);
+            }
+        }
+        getScans();
+    }, [])
+
     const payments = [
         {name: "Cash", slug: "cash"},
         {name: "Card", slug: "card"},
@@ -63,7 +79,7 @@ export const Checkout = ( { operator } ) => {
                                 autoFocus 
                                 type="text" 
                                 onChange={ (e) => setBarcode(e.target.value)} 
-                                value={barcode} />
+                                value={ scanned } />
                             <button id="get-product-button" onClick={ handleGetProduct }>Get Product</button>
                         </div>
                     </div>
