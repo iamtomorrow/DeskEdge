@@ -56,10 +56,12 @@ export const API = {
 
             Cookies.set("token", token);
             Cookies.set("id", id);
-            window.location.href = "/";
+            localStorage.setItem("name", name);
+            localStorage.setItem("email", email);
+            localStorage.setItem("CEO", CEO);
         } catch (err) {
             console.log(err);
-            return err;
+            return null;
         }
     },
 
@@ -79,28 +81,32 @@ export const API = {
             return "Please, provide a valid password.";
         }
 
-        await getDocs(collectionRef)
-        .then((snapshot) => {
-            snapshot.docs.forEach( (doc) => {
-                if (doc.data().email === email) {
-                    token = doc.data().token;
-                    id = doc.data().id;
-                    name = doc.data().name;
-                    _email = doc.data().email;
-                    CEO = doc.data().CEO;
-                    logo = doc.data().logo;
-                };
+        try {
+            await getDocs(collectionRef)
+            .then((snapshot) => {
+                snapshot.docs.forEach( (doc) => {
+                    if (doc.data().email === email) {
+                        token = doc.data().token;
+                        id = doc.data().id;
+                        name = doc.data().company_name;
+                        _email = doc.data().email;
+                        CEO = doc.data().CEO;
+                        logo = doc.data().logo;
+                    };
+                })
             })
-        })
-
-        Cookies.set("token", token);
-        Cookies.set("id", id);
-        localStorage.setItem("name", name);
-        localStorage.setItem("email", _email);
-        localStorage.setItem("CEO", CEO);
-        localStorage.setItem("logo", logo);
-
-        return { token, id };
+    
+            Cookies.set("token", token);
+            Cookies.set("id", id);
+            localStorage.setItem("name", name);
+            localStorage.setItem("email", _email);
+            localStorage.setItem("CEO", CEO);
+            localStorage.setItem("logo", logo);
+    
+            return { token, id };
+        } catch(err) {
+            return null;
+        }
     },
 
     getMe: async ( token ) => {
@@ -151,14 +157,19 @@ export const API = {
     getProduct: async ( id, barcode ) => {
         let product = null;
 
-        await getDoc(doc(database, "containers", id))
-        .then((snapshot) => {
-            snapshot.data().products.forEach((prod) => {
-                if (prod.barcode === barcode) {
-                    product = prod;
-                }
-            });
-        })
+        try {
+            await getDoc(doc(database, "containers", id))
+            .then((snapshot) => {
+                snapshot.data().products.forEach((prod) => {
+                    if (prod.barcode === barcode) {
+                        product = prod;
+                        console.log(product);
+                    }
+                });
+            })
+        } catch(err) {
+            return null
+        }
 
         return product;
     },
@@ -176,5 +187,46 @@ export const API = {
         })
 
         return code;
+    },
+
+    getAsyncScanned: async ( id, setBarcode ) => {
+        let scanned = "";
+
+        onSnapshot(doc(database, "scans", id), (snapshot) => {
+            scanned = snapshot.data().codes.at(-1);
+            setBarcode(scanned);
+            console.log(" = ", scanned);
+        })
+
+        return "s";
+    },
+
+    setCheckout: async ( id, total, payment_method, products ) => {
+        try {
+            await updateDoc(doc(database, "sales", id), {
+                sale: arrayUnion({
+                    id: Date.now(),
+                    date: Date.now(),
+                    total,
+                    payment_method,
+                    products
+                })})
+        } catch (err) {
+            console.log(err);
+            return null;
+        }
+    },
+    
+    getSales: async ( id ) => {
+        let sales = [];
+        try {
+            await getDoc(doc(database, "sales", id))
+            .then((snapshot) => {
+                sales = snapshot.data().sale;
+            })
+            return sales;
+        } catch(err) {
+            return null;
+        }
     }
 }

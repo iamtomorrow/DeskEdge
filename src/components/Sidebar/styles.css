@@ -1,6 +1,6 @@
 
 .sidebar--container {
-    min-width: 300px;
+    width: 300px;
     height: 100%;
     background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
     /* background-color: #13131385; */
@@ -85,4 +85,23 @@
     margin-top: 2px;
     font-size: 13px;
     color: #ffffff87;
+}
+
+@media screen and (max-width: 800px) {
+    .sidebar--container {
+        max-width: 60px;
+    }
+    .sidebar-body--container  {
+        padding: 0;
+    }
+    #logo, .header-logo {
+        width: 40px;
+    }
+    .user-section-right--container {
+        display: none;
+    }
+    .user-logo {
+        width: 30px;
+        height: 30px;
+    }
 }

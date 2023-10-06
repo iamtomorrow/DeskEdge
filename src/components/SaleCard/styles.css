@@ -2,6 +2,27 @@
 .salecard--container {
     width: 220px;
     height: 300px;
-    background: linear-gradient(45deg, #1313133e, #13131396, #1313133c);
+    margin-left: 20px;
+    padding: 6px;
+    background: #13131396;
     border-radius: 3px;
+}
+
+.salecard-header--container {
+    width: 100%;
+    height: 40px;
+}
+.salecard-inner-header--container {
+    padding: 4px 12px 4px 12px;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+}
+.salescard-total, .salescard-date {
+    color: #ffffff;
+    font-size: 13px;
+    font-weight: bold;
 }

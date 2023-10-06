@@ -17,10 +17,12 @@ export const Login = ( ) => {
 
     const handleLogin = async ( e ) => {
         e.preventDefault();
-        alert(email);
 
         if ( !switchForm ) {
-            await API.register(name, country, email, CEO, service, password);
+            let data = await API.register(name, country, email, CEO, service, password);
+            if (data !== null)  {
+                window.location.href = "/";
+            }
         } else {
             let data = await API.access(email, password);
             if (data !== null) {

@@ -9,17 +9,18 @@ import Cookies from "js-cookie";
 
 import { CheckoutItem } from "../CheckoutItem/CheckoutItem";
 
-export const Checkout = ( { operator } ) => {
+export const Checkout = ( ) => {
     const [ id, setId ] = useState(Cookies.get("id"));
 
     const [ total, setTotal ] = useState(0);
     const [ barcode, setBarcode ] = useState('');
     const [ list, setList ] = useState([]);
-    const [ scanned, setScanned ] = useState('');
 
     const [ paymentMethod, setPaymentMethod ] = useState("");
 
-    const handleGetProduct = async ( ) => {
+    const handleGetProduct = async ( e ) => {
+        e.preventDefault();
+
         let data = await API.getProduct( id, barcode );
         if (data !== null) {
             setList(prev => [...prev, data]);
@@ -31,9 +32,11 @@ export const Checkout = ( { operator } ) => {
     }
 
     useEffect(() => {
-        list.map((item) => {
-            setTotal((parseFloat( total ) + parseFloat( item.price )).toFixed(2));
+        let sum = 0;
+        list.forEach( (prod) => {
+            sum += parseFloat( prod.price );
         })
+        setTotal( sum );
     }, [list])
 
     useEffect(( ) => {
@@ -41,15 +44,12 @@ export const Checkout = ( { operator } ) => {
         setId(_id);
     })
 
-    useEffect(( ) => {
-        const getScans = async ( ) => {
-            if (id) {
-                let _scanned = await API.getScanned( id );
-                setScanned(_scanned);
-                console.log("just scanned: ", scanned);
-            }
+    useEffect(( )  => {
+        const getAsyncScanned = async () => {
+            let _scanned = await API.getAsyncScanned( id, setBarcode );
+            setBarcode(_scanned);
         }
-        getScans();
+        getAsyncScanned();  
     }, [])
 
     const payments = [
@@ -58,6 +58,18 @@ export const Checkout = ( { operator } ) => {
         {name: "PIX", slug: "pix"},
         {name: "PayPal", slug: "paypal"},
     ]
+
+    const handleDeleteItem = ( _barcode ) => {
+        setList(list.filter( (prod) => prod.barcode !== _barcode ));
+        console.log("list: ", list);
+    }
+
+    const handleCheckoutClick = async ( ) => {
+        if (paymentMethod !== "" && total !== 0) {
+            await API.setCheckout(id, total, paymentMethod, list);
+            console.log("...");
+        }
+    }
 
     return (
         <div className="App">
@@ -70,18 +82,30 @@ export const Checkout = ( { operator } ) => {
                         <div className="product-list--container">
                             { list &&
                                 list.map((item) => (
-                                    <CheckoutItem name={item.name} PCU={ item.barcode } price={ item.price } quantity={item.quantity} />
+                                    <CheckoutItem name={item.name} 
+                                        PCU={ item.barcode } 
+                                        price={ item.price } 
+                                        quantity={item.quantity}
+                                        barcode={ item.barcode }
+                                        handleDeleteClick={ handleDeleteItem } />
                                 ))
                             }
+                            {/* <p style={{ color: "#fff" }}>Barcode: { barcode }</p> */}
                         </div>
-                        <div className="scanner--container">
-                            <input className="scanner-input" 
-                                autoFocus 
-                                type="text" 
-                                onChange={ (e) => setBarcode(e.target.value)} 
-                                value={ scanned } />
-                            <button id="get-product-button" onClick={ handleGetProduct }>Get Product</button>
-                        </div>
+                        <form className="scanner--container"
+                            onSubmit={ handleGetProduct }>
+                            <div className="scanner-inner--container">
+                                <input className="scanner-input" 
+                                    autoFocus 
+                                    type="text" 
+                                    onChange={ (e) => setBarcode(e.target.value)} 
+                                    value={ barcode } />
+                                <button id="get-product-button" 
+                                    type="submit" 
+                                    onClick={ handleGetProduct }>Get Product
+                                </button>
+                            </div>
+                        </form>
                     </div>
                     <div className="checkout-bar-right--container">
                         <div className="checkout-bar-inner-right--container">
@@ -101,7 +125,7 @@ export const Checkout = ( { operator } ) => {
                                                 <input type="checkbox" 
                                                     className="checkbox-input" 
                                                     checked={ paymentMethod === item.slug ? true : false} 
-                                                    onChange={ () => {} }/>
+                                                    onChange={ () => {} } />
                                                     <span className="checkmark">
                                                     </span>
                                                 <p className="payment-item-p">{ item.name }</p>
@@ -118,7 +142,8 @@ export const Checkout = ( { operator } ) => {
                                     <h1 className="checkout-info-h1">R$ { total }</h1>
                                 </div>
                                 <div className="checkout-submit--container">
-                                    <button className="checkout-submit-button">Confirm</button>
+                                    <button className="checkout-submit-button"
+                                        onClick={ handleCheckoutClick }>Checkout</button>
                                 </div>
                             </footer>
                         </div>

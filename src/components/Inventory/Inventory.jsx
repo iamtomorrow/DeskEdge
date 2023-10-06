@@ -58,7 +58,8 @@ export const Inventory = ( ) => {
                     <div className="inventory-item-list--container">
                         { inventory &&
                             inventory.map((item) => (
-                                <InventoryItem name={ item.name } 
+                                <InventoryItem key={ item.id }
+                                name={ item.name } 
                                 category={ item.category } 
                                 SKU={ item.SKU } 
                                 barcode={ item.barcode }

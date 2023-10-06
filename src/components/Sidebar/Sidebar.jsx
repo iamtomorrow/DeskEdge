@@ -10,7 +10,7 @@ import CheckIcon from 'remixicon-react/CheckLineIcon';
 import CartIcon from 'remixicon-react/ShoppingCart2FillIcon';
 
 import { SidebarItem } from '../SidebarItem/SidebarItem';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 export const Sidebar = ( ) => {
     const [ name, setName ] = useState(localStorage.getItem("name"));
@@ -31,7 +31,7 @@ export const Sidebar = ( ) => {
                 </header>
 
                 <div className='sidebar-body--container'>
-                    <SidebarItem icon={ <DashboardIcon style={{width: 16}} /> } label={"Dashboard"} />
+                    <SidebarItem icon={ <DashboardIcon style={{width: 16}} /> } label={ "Dashboard"} />
                     <SidebarItem icon={ <BarcodeIcon style={{width: 16}} /> } label={"Register"} />
                     <SidebarItem icon={ <AppsIcon style={{width: 16}} /> } label={"Inventory"} />
                     <SidebarItem icon={ <CheckIcon style={{width: 16}} /> } label={"Sales"} />

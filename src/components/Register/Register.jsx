@@ -25,6 +25,40 @@ export const Resgiter = ( ) => {
         setFinalPrice( price - (price * (discount / 100)) )
     }, [price, discount]);
 
+    useEffect(( ) => {
+        const getAsyncScanned = async () => {
+            let _scanned = await API.getAsyncScanned( id, setBarcode );
+            setBarcode(_scanned);
+        }
+        getAsyncScanned();  
+    }, []);
+
+    useEffect(( ) => {
+        const getProduct = async ( ) => {
+            let prods = await API.getProduct( id, barcode );
+            if (prods !== null) {
+                setName(prods.name);
+                setCategory(prods.category);
+                setPrice(prods.price);
+                setDiscount(prods.discount);
+                setFinalPrice(prods.final_price);
+                setQuantity(prods.quantity);
+                setSKU(prods.SKU);
+                setBarcode(prods.barcode);
+            } else {
+                setName("");
+                setCategory("");
+                setPrice("");
+                setDiscount("");
+                setFinalPrice("");
+                setQuantity("");
+                setSKU("");
+                setBarcode("");
+            }
+        }
+        getProduct( );
+    }, [barcode])
+
     const handleRegisterClick = async ( e ) => {
         e.preventDefault();
         let data = await API.registerProduct(id, name, price, discount, finalPrice, category, quantity, SKU, barcode);
