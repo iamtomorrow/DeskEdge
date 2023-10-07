@@ -5,19 +5,26 @@ import './styles.css';
 import DeleteIcon from 'remixicon-react/DeleteBin7FillIcon';
 import PercenteIcon from 'remixicon-react/PercentFillIcon';
 
-export const CheckoutItem = ( { name, PCU, price, barcode, handleDeleteClick } ) => {
+export const CheckoutItem = ( { name, PCU, price, barcode, amount, handleDeleteClick, handleUpdateTotal } ) => {
 
-    const [ quantity, setQuantity ] = useState(1);
+    const [ quantity, setQuantity ] = useState();
     const [ selected, setSelected ] = useState('');
+    const [ subtotal, setSubtotal ] = useState(0);
 
     useEffect(( ) => {
+        console.log("amount: ", amount, " = ", "quant: ", quantity);
         if (quantity === 0) {
             handleDeleteClick( barcode );
         }
-    }, [quantity])
+    }, [ quantity ])
+
+    useEffect(( ) => {
+        setQuantity(amount);
+    }, [])
 
     const handleIncrementClick = ( ) => {
         setQuantity( quantity + 1 );
+        setSubtotal( price );
     }
     const handleDecrementClick = ( ) => {
         if (quantity === 0) {
@@ -25,11 +32,12 @@ export const CheckoutItem = ( { name, PCU, price, barcode, handleDeleteClick } )
         } else {
             setQuantity( quantity - 1 );
         }
+        setSubtotal( price );
+        handleUpdateTotal( subtotal );
     }
 
     return (
         <div className={`checkout-item--container`}
-        /* ${selected === name ? "checkout-item--container-selected " : ""} */
             onClick={ () => setSelected(selected === name ? "" : name) }>
             <div className='checkout-item-inner--container'>
                 <div className='checkout-left--container'>

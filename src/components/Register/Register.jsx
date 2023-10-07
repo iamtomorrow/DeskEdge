@@ -1,5 +1,6 @@
 
 import './styles.css';
+
 import { Sidebar } from "../Sidebar/Sidebar"
 import { Header } from '../Header/Header';
 import { useEffect, useState } from 'react';
@@ -9,7 +10,6 @@ import Cookies from 'js-cookie';
 import BarcodeLineIcon from 'remixicon-react/BarcodeLineIcon';
 
 export const Resgiter = ( ) => {
-
     const [ id, setId ] = useState(Cookies.get("id"));
 
     const [ name, setName ] = useState("");
@@ -36,32 +36,31 @@ export const Resgiter = ( ) => {
     useEffect(( ) => {
         const getProduct = async ( ) => {
             let prods = await API.getProduct( id, barcode );
-            if (prods !== null) {
-                setName(prods.name);
-                setCategory(prods.category);
-                setPrice(prods.price);
-                setDiscount(prods.discount);
-                setFinalPrice(prods.final_price);
-                setQuantity(prods.quantity);
-                setSKU(prods.SKU);
-                setBarcode(prods.barcode);
-            } else {
-                setName("");
-                setCategory("");
-                setPrice("");
-                setDiscount("");
-                setFinalPrice("");
-                setQuantity("");
-                setSKU("");
-                setBarcode("");
+            if (barcode.length === 12) {
+                if (prods !== null) {
+                    setName(prods.name);
+                    setCategory(prods.category);
+                    setPrice(prods.price);
+                    setDiscount(prods.discount);
+                    setFinalPrice(prods.final_price);
+                    setQuantity(prods.quantity);
+                    setSKU(prods.SKU);
+                    setBarcode(prods.barcode);
+                } else {
+                    clearStates();
+                }
             }
         }
         getProduct( );
-    }, [barcode])
+    }, [ barcode ])
 
     const handleRegisterClick = async ( e ) => {
         e.preventDefault();
         let data = await API.registerProduct(id, name, price, discount, finalPrice, category, quantity, SKU, barcode);
+        clearStates();
+    }
+
+    const clearStates = ( ) => {
         setName("");
         setCategory("");
         setPrice("");

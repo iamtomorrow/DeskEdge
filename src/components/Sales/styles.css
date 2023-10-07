@@ -5,7 +5,9 @@
 }
 
 .sales-cards--container {
+    overflow-y: auto;
     width: 100%;
     height: calc(100% - 70px);
     display: flex;
+    flex-wrap: wrap;
 }

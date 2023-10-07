@@ -131,7 +131,7 @@ export const API = {
                 category, 
                 quantity, 
                 SKU, 
-                barcode,
+                barcode: toString(barcode),
                 date: Date.now()
             })
         })
@@ -163,7 +163,6 @@ export const API = {
                 snapshot.data().products.forEach((prod) => {
                     if (prod.barcode === barcode) {
                         product = prod;
-                        console.log(product);
                     }
                 });
             })
@@ -219,6 +218,7 @@ export const API = {
     
     getSales: async ( id ) => {
         let sales = [];
+
         try {
             await getDoc(doc(database, "sales", id))
             .then((snapshot) => {
@@ -228,5 +228,25 @@ export const API = {
         } catch(err) {
             return null;
         }
+    },
+
+    getTotalSales: async ( id ) => {
+        let total;
+        let amount = 0;
+
+        try {
+            await getDoc(doc(database, "sales", id))
+            .then((snapshot) => {
+                total = snapshot.data().sale.length;
+                let sales = snapshot.data().sale;
+                sales.forEach(el => {
+                    amount += el.total
+                })
+            })
+        } catch (err) {
+            return null;
+        }
+
+        return { total, amount };
     }
 }

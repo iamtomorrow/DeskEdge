@@ -17,7 +17,7 @@ export const Sales = ( ) => {
     useEffect(() => {
         const getSales = async ( ) => {
             let _data = await API.getSales( id );
-            setList(_data);
+            setList(_data.reverse());
             console.log("sales: ", list);
         }
         getSales();
@@ -31,7 +31,10 @@ export const Sales = ( ) => {
                 <div className="sales-cards--container">
                     { list &&
                         list.map(item => (
-                            <SaleCard date={ item.date } total={ item.total } products={ item.products } />
+                            <SaleCard date={ item.date } 
+                                total={ item.total } 
+                                products={ item.products }
+                                payment_method={ item.payment_method } />
                         ))
                     }
                 </div>

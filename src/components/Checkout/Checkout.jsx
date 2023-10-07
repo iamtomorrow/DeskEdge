@@ -3,6 +3,9 @@ import { useEffect, useState } from "react";
 import { Header } from "../Header/Header"
 import { Sidebar } from "../Sidebar/Sidebar"
 
+import DeleteIcon from 'remixicon-react/DeleteBin7FillIcon';
+import PercenteIcon from 'remixicon-react/PercentFillIcon';
+
 import './styles.css';
 import { API } from "../../api/Auth";
 import Cookies from "js-cookie";
@@ -15,34 +18,40 @@ export const Checkout = ( ) => {
     const [ total, setTotal ] = useState(0);
     const [ barcode, setBarcode ] = useState('');
     const [ list, setList ] = useState([]);
-
     const [ paymentMethod, setPaymentMethod ] = useState("");
+
+    const [ quantity, setQuantity ] = useState();
+    const [ selected, setSelected ] = useState('');
+
+    const payments = [
+        {name: "Cash", slug: "cash"},
+        {name: "Card", slug: "card"},
+        {name: "PIX", slug: "pix"},
+        {name: "PayPal", slug: "paypal"},
+    ]
 
     const handleGetProduct = async ( e ) => {
         e.preventDefault();
 
         let data = await API.getProduct( id, barcode );
+
         if (data !== null) {
-            setList(prev => [...prev, data]);
-            console.log("list: ", list);
+            let key = list.findIndex(item => item.barcode === barcode);
+            if (key === -1) {
+                setList(prev => [...prev, {...data, amount: 1}]);
+            } else {
+                let _data = { ...list[key], amount: list[key].amount++ };
+            }
         } else {
             alert("Product not found!");
         }
         setBarcode("");
     }
 
-    useEffect(() => {
-        let sum = 0;
-        list.forEach( (prod) => {
-            sum += parseFloat( prod.price );
-        })
-        setTotal( sum );
-    }, [list])
-
     useEffect(( ) => {
         let _id = Cookies.get("id");
         setId(_id);
-    })
+    }, [])
 
     useEffect(( )  => {
         const getAsyncScanned = async () => {
@@ -52,16 +61,18 @@ export const Checkout = ( ) => {
         getAsyncScanned();  
     }, [])
 
-    const payments = [
-        {name: "Cash", slug: "cash"},
-        {name: "Card", slug: "card"},
-        {name: "PIX", slug: "pix"},
-        {name: "PayPal", slug: "paypal"},
-    ]
+    useEffect(( ) => {
+        if (quantity === 0) {
+            handleDeleteClick( barcode );
+        }
+    }, [ quantity ])
 
-    const handleDeleteItem = ( _barcode ) => {
+    useEffect(( ) => {
+        updateTotal();
+    }, [ list, quantity, barcode])
+
+    const handleDeleteClick = ( _barcode ) => {
         setList(list.filter( (prod) => prod.barcode !== _barcode ));
-        console.log("list: ", list);
     }
 
     const handleCheckoutClick = async ( ) => {
@@ -69,6 +80,31 @@ export const Checkout = ( ) => {
             await API.setCheckout(id, total, paymentMethod, list);
             console.log("...");
         }
+    }
+
+    const updateTotal = ( ) => {
+        let sum = 0;
+        list.forEach(item => {
+            sum += item.price * item.amount;
+        })
+        setTotal(sum);
+    }
+
+    const handleDecrementClick = ( _barcode ) => {
+        list.forEach(prod => {
+            if (prod.barcode === _barcode) {
+                prod.amount --;
+            }
+        })
+        updateTotal();
+    }
+    const handleIncrementClick = ( _barcode ) => {
+        list.forEach(prod => {
+            if (prod.barcode === _barcode) {
+                prod.amount ++;
+            }
+        })
+        updateTotal();
     }
 
     return (
@@ -82,12 +118,49 @@ export const Checkout = ( ) => {
                         <div className="product-list--container">
                             { list &&
                                 list.map((item) => (
-                                    <CheckoutItem name={item.name} 
+                                    <div className={`checkout-item--container`}
+                                    onClick={ () => setSelected( selected ===  item.name ? "" :  item.name) }>
+                                    <div className='checkout-item-inner--container'>
+                                        <div className='checkout-left--container'>
+                                            <DeleteIcon className='checkout-item-icon' 
+                                                onClick={ () => handleDeleteClick(  item.barcode ) } />
+                                            <PercenteIcon className='checkout-item-icon' />
+                                        </div>
+                                        <div className='checkout-center--container'>
+                                            <div className='center-item'>
+                                                <p id='item-name'>{ item.name }</p>
+                                            </div>
+                                            <div className='center-item'>
+                                                <p id='item-pcu'>{ item.barcode}</p>
+                                            </div>
+                                            <div className='center-item'>
+                                                <p id='item-price'>R$ { item.price}</p>
+                                            </div>
+                                        </div>
+                                        <div className='checkout-right--container'>
+                                            <div className='item-quantity--container'>
+                                                <button id='item-decrement-button'
+                                                    onClick={ ( ) => handleDecrementClick(item.barcode) }> 
+                                                    -
+                                                </button>
+                                                <p id='item-quantity'>
+                                                    { item.amount }
+                                                </p>
+                                                <button id='item-increment-button' 
+                                                    onClick={ ( ) => handleIncrementClick(item.barcode) }>
+                                                    +
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    </div>
+                                    /* <CheckoutItem name={item.name} 
                                         PCU={ item.barcode } 
                                         price={ item.price } 
-                                        quantity={item.quantity}
+                                        amount={ item.amount }
                                         barcode={ item.barcode }
-                                        handleDeleteClick={ handleDeleteItem } />
+                                        handleDeleteClick={ handleDeleteItem } 
+                                        handleUpdateTotal={ handleUpdateTotal } /> */
                                 ))
                             }
                             {/* <p style={{ color: "#fff" }}>Barcode: { barcode }</p> */}
