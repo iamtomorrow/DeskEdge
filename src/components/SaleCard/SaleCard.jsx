@@ -4,7 +4,7 @@ import { ProductCard } from '../ProductCard/ProductCard';
 import { useEffect } from 'react';
 import { useState } from 'react';
 
-export const SaleCard = ( { date, total, products, payment_method } ) => {
+export const SaleCard = ( { date, total, products, payment_method, opacity } ) => {
     const [ day, setDay ] = useState();
     const [ month, setMonth ] = useState();
     const [ year, setYear ] = useState();
@@ -17,7 +17,7 @@ export const SaleCard = ( { date, total, products, payment_method } ) => {
     }, []);
 
     return (
-        <div className="salecard--container">
+        <div className="salecard--container" style={{ opacity: opacity }}>
             <div className='salecard-inner--container'>
             <header className='salecard-header--container'>
                 <div className='salecard-inner-header--container'>  

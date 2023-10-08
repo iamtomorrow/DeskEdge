@@ -228,20 +228,28 @@ export const API = {
                     products
                 })})
         } catch (err) {
-            console.log(err);
             return null;
         }
     },
     
-    getSales: async ( id ) => {
+    getSales: async ( id, timestamp ) => {
         let sales = [];
+        let dates = [];
+        let filters = [];
 
         try {
             await getDoc(doc(database, "sales", id))
             .then((snapshot) => {
                 sales = snapshot.data().sale;
+                sales.forEach(el => dates.push(el.date));
             })
-            return sales;
+            sales.forEach(el => {
+                if (el.date > timestamp) {
+                    filters.push(el);
+                }
+            })
+
+            return filters;
         } catch(err) {
             return null;
         }
