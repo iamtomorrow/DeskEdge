@@ -11,6 +11,7 @@ import CartIcon from 'remixicon-react/ShoppingCart2FillIcon';
 
 import { SidebarItem } from '../SidebarItem/SidebarItem';
 import { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 
 export const Sidebar = ( ) => {
     const [ name, setName ] = useState(localStorage.getItem("name"));
@@ -25,13 +26,13 @@ export const Sidebar = ( ) => {
         <div className="sidebar--container">
             <div className='sidebar-inner--container'>
                 <header className='sidebar-header--container'>
-                    <div className='logo--container'>
+                    <Link to={'/'} className='logo--container link'>
                         <img id='logo' src={ Logo } />
-                    </div>
+                    </Link>
                 </header>
 
                 <div className='sidebar-body--container'>
-                    <SidebarItem icon={ <DashboardIcon style={{width: 16}} /> } label={ "Dashboard"} />
+                    {/* <SidebarItem icon={ <DashboardIcon style={{width: 16}} /> } label={ "Dashboard"} /> */}
                     <SidebarItem icon={ <BarcodeIcon style={{width: 16}} /> } label={"Register"} />
                     <SidebarItem icon={ <AppsIcon style={{width: 16}} /> } label={"Inventory"} />
                     <SidebarItem icon={ <CheckIcon style={{width: 16}} /> } label={"Sales"} />

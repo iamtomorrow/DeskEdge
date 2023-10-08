@@ -17,7 +17,7 @@ export const Resgiter = ( ) => {
     const [ price, setPrice ] = useState("");
     const [ discount, setDiscount ] = useState("");
     const [ finalPrice, setFinalPrice ] = useState("");
-    const [ quantity, setQuantity ] = useState("");
+    const [ quantity, setQuantity ] = useState(0);
     const [ SKU, setSKU ] = useState("");
     const [ barcode, setBarcode ] = useState("");
 
@@ -31,28 +31,34 @@ export const Resgiter = ( ) => {
             setBarcode(_scanned);
         }
         getAsyncScanned();  
-    }, []);
+    }, [  ]);
 
     useEffect(( ) => {
-        const getProduct = async ( ) => {
-            let prods = await API.getProduct( id, barcode );
-            if (barcode.length === 12) {
-                if (prods !== null) {
-                    setName(prods.name);
-                    setCategory(prods.category);
-                    setPrice(parseFloat(prods.price).toFixed(2));
-                    setDiscount(prods.discount);
-                    setFinalPrice(parseFloat(prods.final_price).toFixed(2));
-                    setQuantity(prods.quantity);
-                    setSKU(prods.SKU);
-                    setBarcode(prods.barcode);
-                } else {
-                    clearStates();
-                }
-            }
-        }
+        getProduct();
+    }, [])
+
+    useEffect(( ) => {
         getProduct( );
     }, [ barcode ])
+
+    const getProduct = async ( ) => {
+        let prods = await API.getProduct( id, barcode );
+
+        if (barcode.length === 12 || prods !== null) {
+            if (prods !== null) {
+                setName(prods.name);
+                setCategory(prods.category);
+                setPrice(parseFloat(prods.price).toFixed(2));
+                setDiscount(prods.discount);
+                setFinalPrice(parseFloat(prods.final_price).toFixed(2));
+                setQuantity(prods.quantity);
+                setSKU(prods.SKU);
+                setBarcode(prods.barcode);
+            } else {
+                clearStates();
+            }
+        }
+    }
 
     const handleRegisterClick = async ( e ) => {
         e.preventDefault();
@@ -70,7 +76,7 @@ export const Resgiter = ( ) => {
         setPrice("");
         setDiscount("");
         setFinalPrice("");
-        setQuantity("");
+        setQuantity(0);
         setSKU("");
         setBarcode("");
     }
@@ -136,7 +142,7 @@ export const Resgiter = ( ) => {
                                     type='number' 
                                     required
                                     value={quantity}
-                                    onChange={(e) => setQuantity(e.target.value)} />
+                                    onChange={(e) => setQuantity(parseInt(e.target.value))} />
                             </label>
                         </label>
                         <label className='form-label'> 

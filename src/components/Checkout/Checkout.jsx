@@ -34,7 +34,6 @@ export const Checkout = ( ) => {
         e.preventDefault();
 
         let data = await API.getProduct( id, barcode );
-
         if (data !== null) {
             let key = list.findIndex(item => item.barcode === barcode);
             if (key === -1) {
@@ -79,6 +78,12 @@ export const Checkout = ( ) => {
         if (paymentMethod !== "" && total !== 0) {
             let data = await API.setCheckout(id, total, paymentMethod, list);
             if (data !== null) {
+
+                for (let i in list) {
+                    console.log(i);
+                    await API.updateProduct( id, list[i].barcode, list[i].amount );
+                }
+
                 clearCheckout();
             } else {
                 alert("!");
@@ -170,13 +175,6 @@ export const Checkout = ( ) => {
                                         </div>
                                     </div>
                                     </div>
-                                    /* <CheckoutItem name={item.name} 
-                                        PCU={ item.barcode } 
-                                        price={ item.price } 
-                                        amount={ item.amount }
-                                        barcode={ item.barcode }
-                                        handleDeleteClick={ handleDeleteItem } 
-                                        handleUpdateTotal={ handleUpdateTotal } /> */
                                 ))
                             }
                             {/* <p style={{ color: "#fff" }}>Barcode: { barcode }</p> */}
@@ -209,8 +207,10 @@ export const Checkout = ( ) => {
                                         <p className="payment-info-p">Payment Method</p>
                                     </div>
                                     <div className="payment-methods--container">
-                                        { payments.map((item) => (
-                                            <div className="payment-item" onClick={ () => setPaymentMethod( item.slug === paymentMethod ? "" : item.slug)}>
+                                        { payments.map((item, index) => (
+                                            <div className="payment-item" 
+                                                onClick={ () => setPaymentMethod( item.slug === paymentMethod ? "" : item.slug)}
+                                                key={ `${index}` }>
                                                 <input type="checkbox" 
                                                     className="checkbox-input" 
                                                     checked={ paymentMethod === item.slug ? true : false} 
@@ -228,7 +228,7 @@ export const Checkout = ( ) => {
                             <footer className="payment-bar-footer--container">
                                 <div className="checkout-info--container">
                                     <h1 className="checkout-info-h1">Total</h1>
-                                    <h1 className="checkout-info-h1">R$ { total }</h1>
+                                    <h1 className="checkout-info-h1">R$ { parseFloat(total).toFixed(2).replace(".", ",") }</h1>
                                 </div>
                                 <div className="checkout-submit--container">
                                     <button className="checkout-submit-button"

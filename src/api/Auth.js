@@ -4,9 +4,9 @@ import Cookies from "js-cookie";
 import bcrypt from 'bcryptjs';
 
 import { app } from "./firebaseConfig";
-import { addDoc, arrayUnion, collection, doc, 
+import { addDoc, arrayUnion, collection, query, doc, 
     getDoc, getDocs, getFirestore, 
-    onSnapshot, setDoc, updateDoc } 
+    onSnapshot, setDoc, updateDoc, where, deleteDoc } 
 from "firebase/firestore";
 
 const database = getFirestore(app);
@@ -132,22 +132,63 @@ export const API = {
     },
 
     registerProduct: async ( id, name, price, discount, final_price, category, quantity, SKU, barcode ) => {  
-        console.log(id);
+        let result;
+        let scans = [];
+        let products = [];
 
-        let result = await updateDoc(doc(database, "containers", id), {
-            products: arrayUnion({
-                name, 
-                price, 
-                discount, 
-                final_price, 
-                category, 
-                quantity, 
-                SKU, 
-                barcode: barcode,
-                date: Date.now()
+        try {
+            await getDoc(doc(database, "scans", id))
+            .then((snapshot ) => {
+                scans = snapshot.data().codes;
             })
-        })
 
+            let res = scans.findIndex((el) => el === barcode);
+            if (res > -1) {
+                let existingProduct;
+
+                await getDoc(doc(database, "containers", id))
+                .then((snapshot) => {
+                    products = [...snapshot.data().products];
+
+                    snapshot.data().products.forEach( async (prod) => {
+                        if (prod.barcode === barcode) {
+                            let updated = {
+                                ...prod, 
+                                quantity: prod.quantity += quantity, 
+                                outputs: prod.outputs
+                            }
+                            let newProds = products.filter(el => el.barcode !== barcode );
+                            newProds.push(updated);
+
+                            result = await  updateDoc(doc(database, `containers`, id), { 
+                                products: newProds
+                            })
+                        }
+                    });
+                })
+            } else {
+                result = await  updateDoc(doc(database, `containers`, id), { 
+                    products: arrayUnion({
+                        name, 
+                        price, 
+                        discount, 
+                        final_price, 
+                        category, 
+                        quantity, 
+                        SKU, 
+                        barcode, 
+                        outputs: 0, 
+                        date: Date.now() 
+                    })
+                })
+                await updateDoc(doc(database, "scans", id), {
+                    codes: arrayUnion( barcode )
+                })
+            }
+        } catch(err) {
+            console.log(err);
+            return null;
+        }
         return result;
     },
 
@@ -181,11 +222,10 @@ export const API = {
                     }
                 });
             })
+            return product;
         } catch(err) {
             return null
         }
-
-        return product;
     },
 
     getScanned: async ( id ) => {
@@ -209,9 +249,7 @@ export const API = {
         onSnapshot(doc(database, "scans", id), (snapshot) => {
             scanned = snapshot.data().codes.at(-1);
             setBarcode(scanned);
-            console.log(" = ", scanned);
         })
-
         return "s";
     },
 
@@ -228,6 +266,7 @@ export const API = {
                     products
                 })})
         } catch (err) {
+            console.log(err);
             return null;
         }
     },
@@ -249,6 +288,7 @@ export const API = {
                 }
             })
 
+            console.log("filters: ", filters);
             return filters;
         } catch(err) {
             return null;
@@ -275,7 +315,65 @@ export const API = {
         return { total, amount };
     },
 
-    deleteProduct: async ( id, _barcode ) => {
+    getAllProducts: async ( id ) => {
+        try {
+            console.log("...");
+            await getDoc(doc(database, `containers`, id))
+            .then((snapshot) => {
+                console.log("s: ", snapshot.data());
+            })
+        } catch(err) {
+            return null;
+        }
+    },
 
+    updateProduct: async ( id, _barcode, quantity ) => {
+        let prods = [];
+    
+        try {
+            await getDoc(doc(database, "containers", id))
+            .then(( snapshot ) => {
+                prods = snapshot.data().products;
+            })
+
+            prods.forEach((prod) => {
+                if (prod.barcode === _barcode) {
+                    prod.quantity -= quantity;
+                    prod.outputs += quantity;
+                }
+            })
+
+            await updateDoc(doc(database, "containers", id), {
+                products: prods
+            })
+    
+        } catch(err) {
+            console.log(err);
+            return null;
+        }
+    },
+
+    getBestSellers: async ( id ) => {
+        let bests = [];
+        let data = [];
+
+        try {
+            await getDoc(doc(database, "containers", id))
+            .then((snapshot) => {
+                bests = snapshot.data().products;
+
+                bests.forEach(el => {
+                    data.push({
+                        name: el.name,
+                        price: el.price,
+                        outputs: el.outputs
+                    })
+                })
+            })
+        } catch(err) {
+            return null;
+        }
+
+        return data;
     }
 }

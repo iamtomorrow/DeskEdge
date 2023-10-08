@@ -1,6 +1,6 @@
 
 .dashboard--container {
-    width: 100%;
+    width: calc(100% - 300px);
     height: 100%;
 }
 
@@ -16,7 +16,7 @@
 }
 
 .dashboard-body--container {
-    max-width: 100%;
+    width: 100%;
     height: calc(100% - 70px);
     overflow-x: auto;
     display: flex;
@@ -27,7 +27,7 @@
     height: 100%;
     margin-left: 10px;
     border-radius: 10px;
-
+    background-color: rgba(0, 0, 0, 0.3);
 }
 .dashboard-inner-section {
     width: 100%;
@@ -57,16 +57,17 @@
     align-items: center;
 }
 
-
-
 .graph--container {
-    padding: 3px;
+    padding: 3px 20px 3px 20px;
     width: 100%;
     height: 50%;
     display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-around;
     align-items: end;
 }
-.info--container {
+.graph-info--container {
     width: 100%;
     padding: 4px;
     height: auto;
@@ -75,15 +76,28 @@
     align-items: center;
     justify-content: space-around;
 }
+.graph-info--container-row {
+    overflow-x: auto;
+    width: 100%;
+    padding: 4px;
+    height: auto;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-around;
+}
 .info--container-h1 {
     color: #ffffff;
-    font-size: 26px;
+    font-size: 32px;
     font-weight: normal;
 }
 .info--container-p {
     color: #ffffff8b;
     font-size: 10px;
     font-weight: bolder;
+    text-align: center;
+    display: fle;
+    flex-wrap: wrap;
 }
 
 

@@ -62,6 +62,9 @@ export const Inventory = ( ) => {
                             <div className="header-item">
                                 <p>Estoque</p>
                             </div>
+                            <div className="header-item">
+                                <p>Outputs</p>
+                            </div>
                         </div>
                     </div>
                     <div className="inventory-item-list--container">
@@ -76,6 +79,7 @@ export const Inventory = ( ) => {
                                 final_price={ item.final_price }
                                 max_discount={ item.discount }
                                 stock={ item.quantity }
+                                outputs={ item.outputs ? item.outputs : 0 }
                                 onClick={ handleItemClick } />
                             ))
                         }

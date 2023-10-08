@@ -9,7 +9,8 @@ export const InventoryItem = ( { name,
         price, 
         final_price, 
         max_discount, 
-        stock } ) => {
+        stock,
+        outputs } ) => {
     const [ selected, setSelected ] = useState('');
 
     return (
@@ -26,6 +27,7 @@ export const InventoryItem = ( { name,
                 <p className='inventory-item'>{ max_discount }%</p>
                 <p className='inventory-item'>R$ { final_price }</p>
                 <p className='inventory-item'>{ stock }</p>
+                <p className='inventory-item'>{ outputs }</p>
             </div>
             { selected === barcode &&
                 <img className={`barcode-image ${selected === barcode ? "barcode-image--selected" : ""}`}

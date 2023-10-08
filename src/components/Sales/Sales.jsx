@@ -30,12 +30,12 @@ export const Sales = ( ) => {
 
     useEffect(( ) => {
         let dateStr = (`${year}-${month}-${day}`);
-        console.log(dateStr);
+        // console.log(dateStr);
 
         let _date = new Date(dateStr);
-
         const _timestamp = _date.getTime();
         setTimestamp(_timestamp);
+
     }, [ day, month, year ]);
 
     useEffect(() => {
@@ -43,6 +43,7 @@ export const Sales = ( ) => {
             setLoading(true);
             let _data = await API.getSales( id, timestamp );
             setLoading(false);
+
             if (_data === null) {
                 alert("!");
             } else {
@@ -50,7 +51,7 @@ export const Sales = ( ) => {
             }
         }
         getSales();
-    }, [ day, month, year, timestamp ]);
+    }, [ timestamp ]);
 
     const days = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10,
                   11, 12, 13, 14, 15, 16, 17, 18, 19, 20,
@@ -107,8 +108,9 @@ export const Sales = ( ) => {
                 </div>
                 <div className="sales-cards--container">
                     { list &&
-                        list.map(item => (
-                            <SaleCard date={ item.date } 
+                        list.map((item, index) => (
+                            <SaleCard key={ index }
+                                date={ item.date } 
                                 total={ item.total } 
                                 products={ item.products }
                                 payment_method={ item.payment_method } 

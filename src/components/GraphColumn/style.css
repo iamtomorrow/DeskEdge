@@ -1,5 +1,20 @@
 
 .graph-column {
-    background: linear-gradient(#0041C0, #563779);
+    cursor: pointer;
+    background: var(--secondary-color);
     width: 30px;
+    box-shadow: 0 0 18px #006eff85;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: start;
+    transition: all .25s ease;
+}
+.graph-column:hover {
+    opacity: .5;
+    transition: all .25s ease;
+}
+.graph-column-value {
+    color: #ffffff;
+    font-size: 10px;
 }
