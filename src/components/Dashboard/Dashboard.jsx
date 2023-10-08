@@ -41,26 +41,23 @@ export const Dashboard = ( ) => {
                                     <h2 className="dashboard-header-title">Sales</h2>
                                 </header>
                                 <div className="dashboard-info-body--container">
-                                    <div className="dashboard-graph--container">
+                                    <div className="dashboard-info--container">
                                         <div className="graph--container">
-                                            <GraphColumn height={amount / 1000} />
+                                            <GraphColumn height={ amount / 1000 } />
                                         </div>
-                                        <div className="graph--container">
-                                            <GraphColumn height={total} />
+                                        <div className="info--container">
+                                            <h1 className="info--container-h1">R$ {amount.toFixed(2).replace(".", ",") }</h1>
+                                            <p className="info--container-p">THIS MONTH</p>
                                         </div>
                                     </div>
-                                    <div className="dashboard-side-info--container">
-                                        <div className="dashboard-side-info">
-                                            <p className="dashboard-side-p">R$ { amount.toFixed(2).replace(".", ",") }</p>
-                                            <h1 className="dashboard-side-h1">
-                                                Total Amount
-                                            </h1>
+
+                                    <div className="dashboard-info--container">
+                                        <div className="graph--container">
+                                            <GraphColumn height={ total } />
                                         </div>
-                                        <div className="dashboard-side-info">
-                                            <p className="dashboard-side-p">{ total }</p>
-                                            <h1 className="dashboard-side-h1">
-                                                Total Sales
-                                            </h1>
+                                        <div className="info--container">
+                                            <h1 className="info--container-h1">{ total }</h1>
+                                            <p className="info--container-p">THIS MONTH</p>
                                         </div>
                                     </div>
                                 </div>

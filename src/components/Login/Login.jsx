@@ -20,12 +20,18 @@ export const Login = ( ) => {
 
         if ( !switchForm ) {
             let data = await API.register(name, country, email, CEO, service, password);
-            if (data !== null)  {
+            console.log(data);
+
+            if (data === null)  {
+                alert("!");
+            } else {
                 window.location.href = "/";
             }
         } else {
             let data = await API.access(email, password);
-            if (data !== null) {
+            if (data === null) {
+                alert("!");
+            } else {
                 window.location.href = "/";
             }
         }

@@ -12,7 +12,6 @@
   "dependencies": {
     "aws-sdk": "^2.1467.0",
     "bcrypt": "^5.1.1",
-    "bcryptjs": "^2.4.3",
     "firebase": "^10.4.0",
     "js-cookie": "^3.0.5",
     "mock-aws-s3": "^4.0.2",

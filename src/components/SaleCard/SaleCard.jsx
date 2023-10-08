@@ -5,27 +5,30 @@ import { useEffect } from 'react';
 import { useState } from 'react';
 
 export const SaleCard = ( { date, total, products, payment_method } ) => {
-
     const [ day, setDay ] = useState();
     const [ month, setMonth ] = useState();
     const [ year, setYear ] = useState();
 
     useEffect(( ) => {
-        let thisDay = new Date(date).getDate();
-        let thisMonth = new Date(date).getMonth();
-        let thisYear = new Date(date).getFullYear();
-        setDay(thisDay);
-        setMonth(thisMonth);
-        setYear(thisYear);
+        let thisDate = new Date(date);
+        setDay(thisDate.getDay());
+        setMonth(thisDate.getMonth());
+        setYear(thisDate.getFullYear());
     }, []);
 
     return (
         <div className="salecard--container">
+            <div className='salecard-inner--container'>
             <header className='salecard-header--container'>
                 <div className='salecard-inner-header--container'>  
                     <div className='salecard-left-header--container'>
-                        <p className='salescard-date'>{ day }/{ month + 1 }/{ year }</p>
-                        <p className='salescard-total'>R$ { total }</p>
+                        <div className='salecard-left'>
+                            <p className='salescard-date'>{ day + 1 }/{ month + 1 }/{ year }</p>
+                            <p className='salescard-time'>{  }</p>
+                        </div>
+                        <div className='salecard-left'>
+                            <p className='salescard-total'>R$ { total.toFixed(2) }</p>
+                        </div>
                     </div>
                     <div className='salecard-right-header--container'>
                          <p className='salescard-payment'>Payment Method: </p>
@@ -41,6 +44,7 @@ export const SaleCard = ( { date, total, products, payment_method } ) => {
                     </div>
                 ))
                 }
+            </div>
             </div>
         </div>
     )

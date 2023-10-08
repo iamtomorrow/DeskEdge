@@ -22,7 +22,7 @@ export const Resgiter = ( ) => {
     const [ barcode, setBarcode ] = useState("");
 
     useEffect(( ) => {
-        setFinalPrice( price - (price * (discount / 100)) )
+        setFinalPrice( parseFloat(price - (price * (discount / 100))).toFixed(2) );
     }, [price, discount]);
 
     useEffect(( ) => {
@@ -40,9 +40,9 @@ export const Resgiter = ( ) => {
                 if (prods !== null) {
                     setName(prods.name);
                     setCategory(prods.category);
-                    setPrice(prods.price);
+                    setPrice(parseFloat(prods.price).toFixed(2));
                     setDiscount(prods.discount);
-                    setFinalPrice(prods.final_price);
+                    setFinalPrice(parseFloat(prods.final_price).toFixed(2));
                     setQuantity(prods.quantity);
                     setSKU(prods.SKU);
                     setBarcode(prods.barcode);
@@ -57,7 +57,11 @@ export const Resgiter = ( ) => {
     const handleRegisterClick = async ( e ) => {
         e.preventDefault();
         let data = await API.registerProduct(id, name, price, discount, finalPrice, category, quantity, SKU, barcode);
-        clearStates();
+        if (data !== null) {
+            clearStates();
+        } else {
+            alert("!");
+        }
     }
 
     const clearStates = ( ) => {
@@ -71,8 +75,8 @@ export const Resgiter = ( ) => {
         setBarcode("");
     }
 
-    const handleGenerateBarcode = ( ) => {
-        setBarcode(Date.now());
+    const handleGenerateBarcode = ( ) => { 
+        setBarcode(Date.now().toString());
     }
 
     return (
@@ -98,7 +102,7 @@ export const Resgiter = ( ) => {
                                     type='text' 
                                     required
                                     value={price} 
-                                    onChange={ (e) => setPrice(e.target.value)} />
+                                    onChange={ (e) => setPrice(parseFloat(e.target.value).toFixed(2))} />
                             </label>
                             <label className='form-label'> 
                                 <p className='label-p'>Discount %</p>

@@ -11,18 +11,21 @@
     padding: 20px;
 }
 .invertory-header--container {
+    position: static;
     width: 100%;
     height: 50px;
     border-radius: 3px;
-    background: #13131399;
 }
 .inventory-inner-header--container {
+    z-index: 3;
     width: 100%;
-    height: 100%;
+    height: 50px;
     display: flex;
     flex-direction: row;
     align-items: center;
     justify-content: space-around;
+    background-color: #0b0b0b;
+    box-shadow: 0 0 12px #0b0b0b88;
 }
 .header-item {
     color: #ffffff;
@@ -39,4 +42,22 @@
     height: 100%;
     display: flex;
     flex-direction: column;
+}
+.inventory-filter--container {
+    width: 100%;
+    height: 80px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+.inventory-filter-item {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    width: 100px;
+    height: 50px;
+    border-radius: 3px;
+    margin-left: 4px;
+    background: #13131399;
 }

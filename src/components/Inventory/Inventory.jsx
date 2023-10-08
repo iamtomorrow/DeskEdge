@@ -15,7 +15,11 @@ export const Inventory = ( ) => {
     useEffect(() => {
         const getProducts = async ( ) => {
             let data = await API.getProducts( id );
-            setInventory(data);
+            if (data === null) {
+                alert("!");
+            } else {
+                setInventory(data);
+            }
         }
         getProducts();
     }, []);
@@ -30,6 +34,11 @@ export const Inventory = ( ) => {
             <div className="inventory--container">
                 <Header label={"Inventory"} />
                 <div className="inventory-bar--container">
+                    {/* <div className="inventory-filter--container">
+                         <div className="inventory-filter-item alpha-filter">
+                            A - Z
+                    </div> */}
+                    
                     <div className="invertory-header--container">
                         <div className="inventory-inner-header--container">
                             <div className="header-item">

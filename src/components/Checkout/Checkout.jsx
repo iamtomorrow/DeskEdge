@@ -77,8 +77,12 @@ export const Checkout = ( ) => {
 
     const handleCheckoutClick = async ( ) => {
         if (paymentMethod !== "" && total !== 0) {
-            await API.setCheckout(id, total, paymentMethod, list);
-            console.log("...");
+            let data = await API.setCheckout(id, total, paymentMethod, list);
+            if (data !== null) {
+                clearCheckout();
+            } else {
+                alert("!");
+            }
         }
     }
 
@@ -94,8 +98,12 @@ export const Checkout = ( ) => {
         list.forEach(prod => {
             if (prod.barcode === _barcode) {
                 prod.amount --;
+                if (prod.amount === 0) {
+                    list.pop(prod);
+                }
             }
         })
+        list.filter(prod => { return prod.amount > 0 });
         updateTotal();
     }
     const handleIncrementClick = ( _barcode ) => {
@@ -105,6 +113,14 @@ export const Checkout = ( ) => {
             }
         })
         updateTotal();
+    }
+
+    const clearCheckout = ( ) => {
+        setTotal("");
+        setBarcode("");
+        setList([]);
+        setPaymentMethod("");
+        setSelected("");
     }
 
     return (

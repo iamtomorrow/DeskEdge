@@ -17,8 +17,12 @@ export const Sales = ( ) => {
     useEffect(() => {
         const getSales = async ( ) => {
             let _data = await API.getSales( id );
-            setList(_data.reverse());
-            console.log("sales: ", list);
+            if (_data === null) {
+                alert("!");
+            } else {
+                setList(_data.reverse());
+                // console.log("sales: ", list);
+            }
         }
         getSales();
     }, []);

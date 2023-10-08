@@ -4,7 +4,10 @@ import Cookies from "js-cookie";
 import bcrypt from 'bcryptjs';
 
 import { app } from "./firebaseConfig";
-import { addDoc, arrayUnion, collection, doc, getDoc, getDocs, getFirestore, onSnapshot, setDoc, updateDoc } from "firebase/firestore";
+import { addDoc, arrayUnion, collection, doc, 
+    getDoc, getDocs, getFirestore, 
+    onSnapshot, setDoc, updateDoc } 
+from "firebase/firestore";
 
 const database = getFirestore(app);
 
@@ -86,24 +89,33 @@ export const API = {
             .then((snapshot) => {
                 snapshot.docs.forEach( (doc) => {
                     if (doc.data().email === email) {
-                        token = doc.data().token;
-                        id = doc.data().id;
-                        name = doc.data().company_name;
-                        _email = doc.data().email;
-                        CEO = doc.data().CEO;
-                        logo = doc.data().logo;
+                        const hash = doc.data().password;
+
+                        (async function() {
+                            const hashCompare = await bcrypt.compare(password, hash);
+                            if ( !hashCompare ) {
+                                return null;
+                            } else {
+                                token = doc.data().token;
+                                id = doc.data().id;
+                                name = doc.data().company_name;
+                                _email = doc.data().email;
+                                CEO = doc.data().CEO;
+                                logo = doc.data().logo; 
+
+                                Cookies.set("token", token);
+                                Cookies.set("id", id);
+                                localStorage.setItem("name", name);
+                                localStorage.setItem("email", _email);
+                                localStorage.setItem("CEO", CEO);
+                                localStorage.setItem("logo", logo);
+                                
+                                return { token, id };
+                            }
+                        })();
                     };
                 })
             })
-    
-            Cookies.set("token", token);
-            Cookies.set("id", id);
-            localStorage.setItem("name", name);
-            localStorage.setItem("email", _email);
-            localStorage.setItem("CEO", CEO);
-            localStorage.setItem("logo", logo);
-    
-            return { token, id };
         } catch(err) {
             return null;
         }
@@ -131,7 +143,7 @@ export const API = {
                 category, 
                 quantity, 
                 SKU, 
-                barcode: toString(barcode),
+                barcode: barcode,
                 date: Date.now()
             })
         })
@@ -141,15 +153,18 @@ export const API = {
 
     getProducts: async ( id ) => {
         let products = [];
-
-        await getDoc(doc(database, "containers", id))
-        .then((snapshot) => {
-            products = snapshot.data().products;
-        })
-
-        onSnapshot(doc(database, "containers", id), (snapshot) => {
-            products = snapshot.data().products;
-        })
+        try {
+            await getDoc(doc(database, "containers", id))
+            .then((snapshot) => {
+                products = snapshot.data().products;
+            })
+    
+            onSnapshot(doc(database, "containers", id), (snapshot) => {
+                products = snapshot.data().products;
+            })
+        } catch(err) {
+            return null;
+        }
 
         return products;
     },
@@ -201,6 +216,8 @@ export const API = {
     },
 
     setCheckout: async ( id, total, payment_method, products ) => {
+        console.log('prods: ', products);
+
         try {
             await updateDoc(doc(database, "sales", id), {
                 sale: arrayUnion({
@@ -248,5 +265,9 @@ export const API = {
         }
 
         return { total, amount };
+    },
+
+    deleteProduct: async ( id, _barcode ) => {
+
     }
 }

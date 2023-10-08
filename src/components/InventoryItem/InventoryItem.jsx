@@ -22,7 +22,7 @@ export const InventoryItem = ( { name,
                 </div>
                 <p className='inventory-item'>{ SKU }</p>
                 <p className='inventory-item'>{ barcode }</p>
-                <p className='inventory-item'>R$ { price }</p>
+                <p className='inventory-item'>R$ { parseFloat(price).toFixed(2) }</p>
                 <p className='inventory-item'>{ max_discount }%</p>
                 <p className='inventory-item'>R$ { final_price }</p>
                 <p className='inventory-item'>{ stock }</p>

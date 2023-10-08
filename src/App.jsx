@@ -5,6 +5,7 @@ import { Sidebar } from './components/Sidebar/Sidebar'
 
 import Cookies from 'js-cookie';
 import { API } from './api/Auth';
+import { Navigate } from 'react-router-dom';
 
 function App() {
 
@@ -13,22 +14,42 @@ function App() {
 
   const [ user, setUser ] = useState();
 
-  useEffect(() => {
+  /* useEffect(() => {
+    if ( token === null ) {
+      window.location.href = "/Login";
+    } else {
+      getMe();
+    }
+  }, []) */
+
+  useEffect(( ) => {
     if ( token === undefined || token === null ) {
       window.location.href = "/Login";
     } else {
       getMe();
     }
-  }, [])
+  }, []);
 
   const getMe = async ( ) => {
-    let data = await API.getMe(id);
-    setUser(data);
+    if (id) {
+      let data = await API.getMe(id);
+      setUser(data);
+    }
   }
 
   return (
     <div className='App'>
-      <Sidebar user={ user ? user : "" } />
+      { token === null &&
+        <p>Login</p>
+      }
+      { token !== null && token !== undefined &&
+        <>
+          <Sidebar user={ user ? user : "" } />
+          <div>
+            App
+          </div>
+        </>
+      }
     </div>
   )
 }
