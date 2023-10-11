@@ -20,8 +20,13 @@ function App() {
 
   const [ total, setTotal ] = useState(0);
   const [ amount, setAmount ] = useState(0);
+  const [ paymentMethods, setPaymentMethods ] = useState([]);
 
   const [ bestSellers, setBestSellers ] = useState([]);
+
+  useEffect(( ) => {
+      document.title = `Edge | ${name}`
+  }, []);
 
   useEffect(( ) => {
     const getAllProducts = async ( ) => {
@@ -36,6 +41,7 @@ function App() {
           console.log(data);
           setTotal(data.total);
           setAmount(data.amount);
+          setPaymentMethods(data.payment_methods);
       }
       getTotalSales( );
   }, []);
@@ -147,10 +153,12 @@ function App() {
 
               <section className="dashboard-section financial-section">
                   <div className="dashboard-inner-section">
+                    <div className='graph-info--container-row'>
 
+                    </div>
                   </div>
               </section>
-          </div>
+            </div>  
             </div>
           </div>
         </>

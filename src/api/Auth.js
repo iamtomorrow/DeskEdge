@@ -298,6 +298,7 @@ export const API = {
     getTotalSales: async ( id ) => {
         let total;
         let amount = 0;
+        let payment_methods = [];
 
         try {
             await getDoc(doc(database, "sales", id))
@@ -306,13 +307,14 @@ export const API = {
                 let sales = snapshot.data().sale;
                 sales.forEach(el => {
                     amount += el.total
+                    payment_methods.push(el.payment_method);
                 })
             })
         } catch (err) {
             return null;
         }
 
-        return { total, amount };
+        return { total, amount, payment_methods };
     },
 
     getAllProducts: async ( id ) => {
