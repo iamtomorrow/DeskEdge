@@ -31,7 +31,7 @@ export const Resgiter = ( ) => {
             setBarcode(_scanned);
         }
         getAsyncScanned();  
-    }, [  ]);
+    }, []);
 
     useEffect(( ) => {
         getProduct();

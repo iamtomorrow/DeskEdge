@@ -14,6 +14,7 @@ export const Sales = ( ) => {
     const [ id, setId ] = useState(Cookies.get("id"));
     const [ list, setList ] = useState([]);
 
+    const [ dayNumber, setDayNumber ] = useState( );
     const [ day, setDay ] = useState( );
     const [ month, setMonth ] = useState( );
     const [ year, setYear ] = useState( );
@@ -23,15 +24,16 @@ export const Sales = ( ) => {
 
     useEffect(( ) => {
         let thisDate = new Date(Date.now());
-        setDay(thisDate.getDay() + 1);
+        setDayNumber(thisDate.getDay());
+        setDay(thisDate.getDate());
         setMonth(thisDate.getMonth() + 1);
         setYear(thisDate.getFullYear());
+
+        console.log("Now: ");
     }, []);
 
     useEffect(( ) => {
-        let dateStr = (`${year}-${month}-${day}`);
-        // console.log(dateStr);
-
+        let dateStr = (`${year}-${month-1}-${dayNumber}`);
         let _date = new Date(dateStr);
         const _timestamp = _date.getTime();
         setTimestamp(_timestamp);
@@ -72,7 +74,7 @@ export const Sales = ( ) => {
                                 <option onClick={ () => setDay()}>{ day }</option>
                                     { days &&
                                         days.map((item) => (
-                                            <option onClick={ () => setDay(item)}>{ item }</option>
+                                            <option onClick={ () => setDay( item )}>{ item }</option>
                                         ))
                                     }
                                 </select>

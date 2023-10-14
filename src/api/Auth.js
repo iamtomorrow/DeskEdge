@@ -139,35 +139,40 @@ export const API = {
         try {
             await getDoc(doc(database, "scans", id))
             .then((snapshot ) => {
-                scans = snapshot.data().codes;
+                if (snapshot.data() === undefined) {
+                    scans.push( barcode );
+                } else {
+                    scans = snapshot.data().codes;
+                }
             })
 
             let res = scans.findIndex((el) => el === barcode);
-            if (res > -1) {
+            if (res > -1 ) {
                 let existingProduct;
-
                 await getDoc(doc(database, "containers", id))
                 .then((snapshot) => {
                     products = [...snapshot.data().products];
 
-                    snapshot.data().products.forEach( async (prod) => {
-                        if (prod.barcode === barcode) {
-                            let updated = {
-                                ...prod, 
-                                quantity: prod.quantity += quantity, 
-                                outputs: prod.outputs
+                    if (snapshot.data() !== undefined) {
+                        snapshot.data().products.forEach( async (prod) => {
+                            if (prod.barcode === barcode) {
+                                let updated = {
+                                    ...prod, 
+                                    quantity: prod.quantity += quantity, 
+                                    outputs: prod.outputs
+                                }
+                                let newProds = products.filter(el => el.barcode !== barcode );
+                                newProds.push(updated);
+    
+                                result = await updateDoc(doc(database, `containers`, id), { 
+                                    products: newProds
+                                })
                             }
-                            let newProds = products.filter(el => el.barcode !== barcode );
-                            newProds.push(updated);
-
-                            result = await  updateDoc(doc(database, `containers`, id), { 
-                                products: newProds
-                            })
-                        }
-                    });
+                        });
+                    }
                 })
             } else {
-                result = await  updateDoc(doc(database, `containers`, id), { 
+                result = await updateDoc(doc(database, `containers`, id), { 
                     products: arrayUnion({
                         name, 
                         price, 
@@ -182,7 +187,7 @@ export const API = {
                     })
                 })
                 await updateDoc(doc(database, "scans", id), {
-                    codes: arrayUnion( barcode )
+                    codes: arrayUnion(barcode)
                 })
             }
         } catch(err) {
@@ -244,13 +249,17 @@ export const API = {
     },
 
     getAsyncScanned: async ( id, setBarcode ) => {
-        let scanned = "";
+        let scanned;
 
         onSnapshot(doc(database, "scans", id), (snapshot) => {
-            scanned = snapshot.data().codes.at(-1);
-            setBarcode(scanned);
+            if (snapshot.data() !== undefined) {
+                scanned = snapshot.data().codes.at(-1);
+                setBarcode(scanned);
+            } else {
+                scanned = "";
+            }
         })
-        return "s";
+        return scanned;
     },
 
     setCheckout: async ( id, total, payment_method, products ) => {
@@ -283,12 +292,11 @@ export const API = {
                 sales.forEach(el => dates.push(el.date));
             })
             sales.forEach(el => {
-                if (el.date > timestamp) {
+                if (timestamp >= el.date ) {
                     filters.push(el);
                 }
             })
-
-            console.log("filters: ", filters);
+            // console.log("filters: ", filters);
             return filters;
         } catch(err) {
             return null;
@@ -319,7 +327,6 @@ export const API = {
 
     getAllProducts: async ( id ) => {
         try {
-            console.log("...");
             await getDoc(doc(database, `containers`, id))
             .then((snapshot) => {
                 console.log("s: ", snapshot.data());
@@ -377,5 +384,40 @@ export const API = {
         }
 
         return data;
+    },
+
+    getSalesAnalytics: async ( id ) => {
+        let day = 0;
+        let month = 0;
+        let year = 2023;
+
+        let data = [];
+        let analytics = [];
+
+        try {
+            await getDoc(doc(database, "sales", id))
+            .then((snapshot) => {
+                snapshot.data().sale.forEach(( el ) => {
+                    data.push(el);
+                })
+            })
+        } catch (err) {
+            console.log(err);
+            return null;
+        }
+
+        for (let i = 0; i < 30; i++) {
+            let dateStr = `2023-10-${day+i}`;
+            let _date = new Date(dateStr);
+            let timestamp = _date.getTime();
+            // console.log(timestamp);
+
+            data.forEach(( el ) => {
+                if (el.date >= timestamp && (parseInt(timestamp) + 86400000) >= el.date) {
+                    // analytics.push( timestamp, el );
+                }
+            })
+        }
+        // console.log('analy: ', analytics);
     }
 }

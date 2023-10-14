@@ -11,7 +11,7 @@ export const SaleCard = ( { date, total, products, payment_method, opacity } ) =
 
     useEffect(( ) => {
         let thisDate = new Date(date);
-        setDay(thisDate.getDay());
+        setDay(thisDate.getDate());
         setMonth(thisDate.getMonth());
         setYear(thisDate.getFullYear());
     }, []);
@@ -23,7 +23,7 @@ export const SaleCard = ( { date, total, products, payment_method, opacity } ) =
                 <div className='salecard-inner-header--container'>  
                     <div className='salecard-left-header--container'>
                         <div className='salecard-left'>
-                            <p className='salescard-date'>{ day + 1 }/{ month + 1 }/{ year }</p>
+                            <p className='salescard-date'>{ day }/{ month + 1 }/{ year }</p>
                             <p className='salescard-time'>{  }</p>
                         </div>
                         <div className='salecard-left'>

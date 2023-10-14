@@ -1,11 +1,12 @@
 import { useEffect, useState } from 'react'
 
 import './App.css'
+import favicon from '../public/images/logo/desk-edge-logo.ico';
+
 import { Sidebar } from './components/Sidebar/Sidebar'
 
 import Cookies from 'js-cookie';
 import { API } from './api/Auth';
-import { Navigate } from 'react-router-dom';
 
 import { GraphColumn } from './components/GraphColumn/GraphColumn';
 
@@ -25,7 +26,19 @@ function App() {
   const [ bestSellers, setBestSellers ] = useState([]);
 
   useEffect(( ) => {
-      document.title = `Edge | ${name}`
+    const getSalesAnalytics = async ( ) => {
+      await API.getSalesAnalytics( id );
+    }
+    getSalesAnalytics();
+  })
+
+  useEffect(( ) => {
+      document.title = `Edge | ${name}`;
+      let link = document.createElement("link");
+      link.rel = "icon";
+      document.head.appendChild(link);
+      link.href = favicon;
+
   }, []);
 
   useEffect(( ) => {

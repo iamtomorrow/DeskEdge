@@ -86,3 +86,12 @@
     color: var(--primary-color);
     font-size: 11px;
 }
+
+@media screen and (max-width: 800px) {
+    .register--container {
+        width: calc(100% - 60px);
+    }
+    .register-form {
+        width: 100%;
+    }
+}
