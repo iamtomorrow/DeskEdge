@@ -33,32 +33,32 @@ export const Resgiter = ( ) => {
         getAsyncScanned();  
     }, []);
 
-    useEffect(( ) => {
-        getProduct();
-    }, [])
+    const getProduct = async ( ) => {
+        let prods = await API.getProduct( id, barcode );
+
+        if (prods === null) {
+            console.log("Product not found!");
+        } else {
+            if (barcode.length === 12 || prods !== null) {
+                if (prods !== null) {
+                    setName(prods.name);
+                    setCategory(prods.category);
+                    setPrice(parseFloat(prods.price).toFixed(2));
+                    setDiscount(prods.discount);
+                    setFinalPrice(parseFloat(prods.final_price).toFixed(2));
+                    setQuantity(prods.quantity);
+                    setSKU(prods.SKU);
+                    setBarcode(prods.barcode);
+                } else {
+                    clearStates();
+                }
+            }
+        }
+    }
 
     useEffect(( ) => {
         getProduct( );
     }, [ barcode ])
-
-    const getProduct = async ( ) => {
-        let prods = await API.getProduct( id, barcode );
-
-        if (barcode.length === 12 || prods !== null) {
-            if (prods !== null) {
-                setName(prods.name);
-                setCategory(prods.category);
-                setPrice(parseFloat(prods.price).toFixed(2));
-                setDiscount(prods.discount);
-                setFinalPrice(parseFloat(prods.final_price).toFixed(2));
-                setQuantity(prods.quantity);
-                setSKU(prods.SKU);
-                setBarcode(prods.barcode);
-            } else {
-                clearStates();
-            }
-        }
-    }
 
     const handleRegisterClick = async ( e ) => {
         e.preventDefault();

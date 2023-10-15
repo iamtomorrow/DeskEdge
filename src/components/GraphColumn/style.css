@@ -1,5 +1,13 @@
 
 .graph-column {
+    height: 100%;
+    min-width: 100px;
+    display: flex;
+    flex-direction: flex;
+    align-items: flex-end;
+    justify-content: center;
+}
+.graph-column-inner {
     cursor: pointer;
     background: var(--secondary-color);
     width: 30px;

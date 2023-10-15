@@ -329,7 +329,7 @@ export const API = {
         try {
             await getDoc(doc(database, `containers`, id))
             .then((snapshot) => {
-                console.log("s: ", snapshot.data());
+                // console.log("s: ", snapshot.data());
             })
         } catch(err) {
             return null;

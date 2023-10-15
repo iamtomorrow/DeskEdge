@@ -104,73 +104,77 @@ function App() {
             </section>
 
             <div className="dashboard-body--container">
-              <section className="dashboard-section financial-section">
-                  <div className="dashboard-inner-section">
-                      <header className="dashboard-header--container">
-                          <h2 className="dashboard-header-title">Sales</h2>
-                      </header>
-                      <div className="dashboard-info-body--container">
-                          <div className="dashboard-info--container">
-                              <div className="graph--container">
-                                  <GraphColumn height={ amount / 1000 } value={amount} />
-                              </div>
-                              <div className="graph-info--container">
-                                  <h1 className="info--container-h1">R$ {amount.toFixed(2).replace(".", ",") }</h1>
-                                  <p className="info--container-p">THIS MONTH</p>
-                              </div>
-                          </div>
+              <div className='dashboard-body-inner--container'>
+                <section className="dashboard-section financial-section">
+                    <div className="dashboard-inner-section">
+                        <header className="dashboard-header--container">
+                            <h2 className="dashboard-header-title">Sales</h2>
+                        </header>
+                        <div className="dashboard-info-body--container">
+                            <div className="dashboard-info--container">
+                                <div className="graph--container">
+                                    <GraphColumn height={ amount / 1000 } value={amount} />
+                                </div>
+                                <div className="graph-info--container">
+                                    <h1 className="info--container-h1">R$ {amount.toFixed(2).replace(".", ",") }</h1>
+                                    <p className="info--container-p">THIS MONTH</p>
+                                </div>
+                            </div>
 
-                          <div className="dashboard-info--container">
-                              <div className="graph--container">
-                                  <GraphColumn height={ total } value={total} />
-                              </div>
-                              <div className="graph-info--container">
-                                  <h1 className="info--container-h1">{ total }</h1>
-                                  <p className="info--container-p">THIS MONTH</p>
-                              </div>
-                          </div>
-                      </div>
-                  </div>
-              </section>
-
-              <section className="dashboard-section financial-section">
-                  <div className="dashboard-inner-section">
-                    <header className="dashboard-header--container">
-                      <h2 className="dashboard-header-title">Best Sellers</h2>
-                    </header>
-
-                    <div className="dashboard-info-body--container">
-                          <div className="dashboard-info--container">
-                              <div className="graph--container">
-                                  { bestSellers &&
-                                      bestSellers.map(item => (
-                                        <GraphColumn height={ parseInt(item.outputs) } 
-                                          value={item.outputs} />
-                                      ))
-                                  }
-                              </div>
-                              <div className="graph-info--container-row">
-                                  { bestSellers &&
-                                      bestSellers.map(item => (
-                                        <>
-                                          <p className='info--container-p'>{ item.outputs }</p>
-                                          <p className='info--container-p'>{ item.name }</p>
-                                        </>
-                                      ))
-                                  }
-                              </div>
-                          </div>
-                      </div>
-                  </div>
-              </section>
-
-              <section className="dashboard-section financial-section">
-                  <div className="dashboard-inner-section">
-                    <div className='graph-info--container-row'>
-
+                            <div className="dashboard-info--container">
+                                <div className="graph--container">
+                                    <GraphColumn height={ total } value={total} />
+                                </div>
+                                <div className="graph-info--container">
+                                    <h1 className="info--container-h1">{ total }</h1>
+                                    <p className="info--container-p">THIS MONTH</p>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                  </div>
-              </section>
+                </section>
+
+                <section className="dashboard-section financial-section">
+                    <div className="dashboard-inner-section">
+                      <header className="dashboard-header--container">
+                        <h2 className="dashboard-header-title">Best Sellers</h2>
+                      </header>
+
+                      <div className="dashboard-info-body--container">
+                            <div className="dashboard-info--container">
+                                <div className="graph--container">
+                                    { bestSellers &&
+                                        bestSellers.map(item => (
+                                          <GraphColumn height={ parseInt(item.outputs) } 
+                                            value={item.outputs} />
+                                        ))
+                                    }
+                                </div>
+                                <div className="graph-info--container-row">
+                                    { bestSellers &&
+                                        bestSellers.map(item => (
+                                          <>
+                                            <div className='info-p--container'>
+                                              <p className='info--container-p'>{ item.outputs }</p>
+                                              <p className='info--container-p'>{ item.name }</p>
+                                            </div>
+                                          </>
+                                        ))
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section className="dashboard-section financial-section">
+                    <div className="dashboard-inner-section">
+                      <div className='graph-info--container-row'>
+
+                      </div>
+                    </div>
+                </section>
+              </div>
             </div>  
             </div>
           </div>

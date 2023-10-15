@@ -18,9 +18,15 @@
 .dashboard-body--container {
     width: 100%;
     height: calc(100% - 70px);
-    overflow-x: auto;
+
     display: flex;
-    padding: 12px 12px 20px 0;
+    padding: 10px 0 0 0;
+}
+.dashboard-body-inner--container {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    border-radius: 10px;
 }
 .dashboard-section {
     min-width: 300px;
@@ -49,8 +55,8 @@
     flex-direction: column;
 }
 .dashboard-info--container {
-    overflow-x: auto;
-    max-width: 100%;
+    overflow: auto;
+    width: 100%;
     height: 50%;
     padding: 6px;
     display: flex;
@@ -59,18 +65,14 @@
 }
 
 .graph--container {
-    padding: 3px 20px 3px 20px;
     width: 100%;
     height: 50%;
     display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-around;
-    align-items: end;
+    justify-content: start;
+    align-items: start;
 }
 .graph-info--container {
     width: 100%;
-    padding: 4px;
     height: auto;
     display: flex;
     flex-direction: column;
@@ -79,14 +81,17 @@
 }
 
 .graph-info--container-row {    
-    overflow-x: auto;
     width: 100%;
-    padding: 4px;
     height: auto;
     display: flex;
-    flex-direction: row;
+}
+.info-p--container {
+    min-width: 100px;
+    height: 60px;
+    display: flex;
     align-items: center;
-    justify-content: space-around;
+    justify-content: center;
+    margin-left: 2px;
 }
 .info--container-h1 {
     color: #ffffff;
