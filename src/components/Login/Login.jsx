@@ -20,8 +20,6 @@ export const Login = ( ) => {
 
         if ( !switchForm ) {
             let data = await API.register(name, country, email, CEO, service, password);
-            console.log(data);
-
             if (data === null)  {
                 alert("!");
             } else {

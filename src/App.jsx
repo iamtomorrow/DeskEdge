@@ -25,12 +25,12 @@ function App() {
 
   const [ bestSellers, setBestSellers ] = useState([]);
 
-  useEffect(( ) => {
+  /* useEffect(( ) => {
     const getSalesAnalytics = async ( ) => {
       await API.getSalesAnalytics( id );
     }
     getSalesAnalytics();
-  })
+  }, []); */
 
   useEffect(( ) => {
       document.title = `Edge | ${name}`;
@@ -51,10 +51,12 @@ function App() {
   useEffect(( ) => {
       const getTotalSales = async ( ) => {
           let data = await API.getTotalSales( id );
-          console.log(data);
-          setTotal(data.total);
-          setAmount(data.amount);
-          setPaymentMethods(data.payment_methods);
+          if (data) {
+            console.log(data);
+            setTotal(data.total);
+            setAmount(data.amount);
+            setPaymentMethods(data.payment_methods);
+          }
       }
       getTotalSales( );
   }, []);
