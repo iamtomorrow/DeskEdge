@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 
 import './App.css'
-import favicon from '../public/images/logo/desk-edge-logo.ico';
+import favicon from '../public/images/icons/edge-favicon.ico';
 
 import { Sidebar } from './components/Sidebar/Sidebar'
 
