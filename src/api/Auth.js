@@ -1,7 +1,7 @@
 
 import validator from "validator"
 import Cookies from "js-cookie";
-import bcrypt from 'bcryptjs';
+import bcrypt from 'crypto';
 
 import { app } from "./firebaseConfig";
 import { addDoc, arrayUnion, collection, query, doc, 

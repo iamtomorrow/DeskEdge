@@ -1,4 +1,9 @@
 module.exports = {
+  target: 'node',
+  resolve: {
+    fallback: {
+        "crypto": require.resolve("crypto-browserify")
+    },
   root: true,
   env: { browser: true, es2020: true },
   extends: [
